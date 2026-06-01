@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  telegramId String  @unique
+  username   String?
+  firstName  String?
+
+  role    Role @default(USER)
+  respect Int  @default(0)
+
+  entries Entry[]
+
+  chat   Chat?   @relation(fields: [chatId], references: [id])
+  chatId String?
+}
+
+model Chat {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  telegramId String @unique
+  title      String?
+
+  users    User[]
+  messages Entry[]
+}
+
+model Entry {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  text String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  chat   Chat   @relation(fields: [chatId], references: [id])
+  chatId String
+}
