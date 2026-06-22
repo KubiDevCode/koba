@@ -9,6 +9,9 @@ type IncomingMessage = {
     telegramUserId: number;
     username: string;
     text: string;
+    chat: {
+        title: string;
+    };
 };
 
 export async function saveIncomingMessage(message: IncomingMessage) {
@@ -19,6 +22,7 @@ export async function saveIncomingMessage(message: IncomingMessage) {
         update: {},
         create: {
             telegramId: String(message.telegramChatId),
+            title: String(message.chat.title),
         },
     });
 
@@ -26,11 +30,20 @@ export async function saveIncomingMessage(message: IncomingMessage) {
         where: { telegramId: BOT_TELEGRAM_ID },
         update: {
             username: BOT_USERNAME,
+            chats: {
+                connect: {
+                    id: chat.id,
+                },
+            },
         },
         create: {
             telegramId: BOT_TELEGRAM_ID,
             username: BOT_USERNAME,
-            chatId: chat.id,
+            chats: {
+                connect: {
+                    id: chat.id,
+                },
+            },
         },
     });
 
@@ -40,12 +53,20 @@ export async function saveIncomingMessage(message: IncomingMessage) {
         },
         update: {
             username: message.username,
-            chatId: chat.id,
+            chats: {
+                connect: {
+                    id: chat.id,
+                },
+            },
         },
         create: {
             telegramId: String(message.telegramUserId),
             username: message.username,
-            chatId: chat.id,
+            chats: {
+                connect: {
+                    id: chat.id,
+                },
+            },
         },
     });
 

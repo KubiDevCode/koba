@@ -1,6 +1,11 @@
 import { config as loadEnv } from 'dotenv';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-loadEnv({ override: true });
+const currentDir = dirname(fileURLToPath(import.meta.url));
+
+loadEnv({ path: resolve(currentDir, '../../.env'), override: true });
+loadEnv({ override: false });
 
 function requireEnv(name: string) {
     const value = process.env[name]?.trim();

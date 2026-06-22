@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { useEffect, useState } from "react";
 import {
   groups,
   type ArchiveEvent,
@@ -22,9 +23,20 @@ import {
   BottomNavigation,
   type MainView,
 } from "../widgets/bottom-navigation";
+import api from "../shared/api/api";
 import "./styles/index.css";
 
 type View = MainView | "group" | "event";
+
+function getMockEvents(): EventWithGroup[] {
+  return groups.flatMap((group) =>
+    group.events.map((event) => ({ ...event, group })),
+  );
+}
+
+function isEventWithGroupArray(data: unknown): data is EventWithGroup[] {
+  return Array.isArray(data) && data.every((event) => "group" in event);
+}
 
 export function App() {
   const [view, setView] = useState<View>("groups");
@@ -34,16 +46,64 @@ export function App() {
   const [inviteOpen, setInviteOpen] = useState(false);
   const [participantsOpen, setParticipantsOpen] = useState(false);
   const [userName] = useState(getTelegramFirstName);
+  const [events, setEvents] = useState<EventWithGroup[]>(getMockEvents);
 
   useEffect(initializeTelegramApp, []);
 
-  const events = useMemo<EventWithGroup[]>(
-    () =>
-      groups.flatMap((group) =>
-        group.events.map((event) => ({ ...event, group })),
-      ),
-    [],
-  );
+  const userId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
+  const initData = window.Telegram?.WebApp?.initData;
+
+  useEffect(() => {
+    if (!userId || !initData) {
+      return;
+    }
+
+    let cancelled = false;
+
+    void api
+      .get(`/event/${userId}`)
+      .then((response) => {
+        if (cancelled) {
+          return;
+        }
+
+        if (isEventWithGroupArray(response.data)) {
+          setEvents(response.data);
+          return;
+        }
+
+        console.warn("Unexpected events payload shape", response.data);
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          console.error("Failed to load events", error);
+        }
+      });
+      
+    void api
+      .get(`/chat/${userId}`)
+      .then((response) => {
+        if (cancelled) {
+          return;
+        }
+
+        if (isEventWithGroupArray(response.data)) {
+          setEvents(response.data);
+          return;
+        }
+
+        console.warn("Unexpected events payload shape", response.data);
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          console.error("Failed to load events", error);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initData, userId]);
 
   const openGroup = (group: Group) => {
     setActiveGroup(group);
@@ -63,20 +123,25 @@ export function App() {
   const mainViewVisible =
     view === "groups" || view === "calendar" || view === "profile";
 
+  console.log(window.Telegram?.WebApp?.initDataUnsafe);
+
   return (
     <div className="app-shell">
       <main className="app-content">
         {view === "groups" && (
-          <GroupsPage
-            userName={userName}
-            groups={groups}
-            events={events}
-            onOpenGroup={openGroup}
-            onOpenEvent={openEventWithGroup}
-            onOpenInvite={() => setInviteOpen(true)}
-            onOpenProfile={() => setView("profile")}
-            onOpenCalendar={() => setView("calendar")}
-          />
+          <>
+            <GroupsPage
+              userName={userName}
+              groups={groups}
+              events={events}
+              onOpenGroup={openGroup}
+              onOpenEvent={openEventWithGroup}
+              onOpenInvite={() => setInviteOpen(true)}
+              onOpenProfile={() => setView("profile")}
+              onOpenCalendar={() => setView("calendar")}
+            />
+            <pre>{JSON.stringify(initData, null, 2)}</pre>
+          </>
         )}
         {view === "group" && (
           <GroupPage

@@ -26,8 +26,9 @@ model User {
 
   entries Entry[]
 
-  chat   Chat?   @relation(fields: [chatId], references: [id])
-  chatId String?
+  chats   Chat[]
+  event   Event[]
+  eventId String?
 }
 
 model Chat {
@@ -35,11 +36,12 @@ model Chat {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  telegramId String @unique
+  telegramId String  @unique
   title      String?
 
   users    User[]
   messages Entry[]
+  events   Event[]
 }
 
 model Entry {
@@ -54,4 +56,19 @@ model Entry {
 
   chat   Chat   @relation(fields: [chatId], references: [id])
   chatId String
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  title       String
+  description String?
+  date        DateTime
+
+  chat   Chat   @relation(fields: [chatId], references: [id])
+  chatId String
+
+  users User[]
 }

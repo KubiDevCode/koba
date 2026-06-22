@@ -28,11 +28,17 @@ export function registerTextHandler(bot: Telegraf, bootTimeMs: number) {
                 tgUser.first_name ??
                 `user_${tgUser.id}`;
 
+            const chat =
+                tgChat.type !== 'private'
+                    ? { title: tgChat.title }
+                    : { title: username };
+
             const savedMessage = await saveIncomingMessage({
                 telegramChatId: tgChat.id,
                 telegramUserId: tgUser.id,
                 username,
                 text,
+                chat,
             });
 
             const repliedMessage = ctx.message.reply_to_message;

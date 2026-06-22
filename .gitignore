@@ -1,5 +1,9 @@
 node_modules
+frontend/node_modules
+frontend/dist
 # Keep environment variables out of version control
 .env
 
 /generated/prisma
+/packages/database/generated/prisma
+*.log

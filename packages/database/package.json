@@ -1,0 +1,11 @@
+{
+  "name": "@app/database",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./generated/prisma/client.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.8.0"
+  }
+}

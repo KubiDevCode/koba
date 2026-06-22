@@ -20,7 +20,7 @@
 Установить зависимости:
 
 ```powershell
-cd tg-app
+cd frontend
 npm install
 ```
 
@@ -62,7 +62,7 @@ npm run share
 Первый терминал:
 
 ```powershell
-cd tg-app
+cd frontend
 npm run share -- --port 4173
 ```
 
