@@ -18,12 +18,23 @@ export function ParticipantsModal({ event, open, onClose }: Props) {
       onClose={onClose}
       scrollable
     >
-      <div className="participant-list">
+      <div className="grid gap-2">
         {event.participants.map((participant) => (
-          <div key={participant.id}>
-            <img src={participant.avatar} alt="" />
-            <strong>{participant.name}</strong>
-            <span><Check size={14} /></span>
+          <div
+            className="flex min-h-13 items-center gap-3 rounded-lg bg-slate-100 p-2"
+            key={participant.id}
+          >
+            <img
+              className="h-10 w-10 rounded-full object-cover"
+              src={participant.avatar}
+              alt=""
+            />
+            <strong className="text-sm font-extrabold text-slate-950">
+              {participant.name}
+            </strong>
+            <span className="ml-auto grid h-6 w-6 place-items-center rounded-full bg-emerald-600 text-white">
+              <Check size={14} />
+            </span>
           </div>
         ))}
       </div>

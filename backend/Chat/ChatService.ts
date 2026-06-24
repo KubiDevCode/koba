@@ -11,7 +11,15 @@ class ChatService {
                 }
             },
             include:{
-                users: true
+                users: true,
+                events: {
+                    include: {
+                        users: true,
+                    },
+                    orderBy: {
+                        date: "desc",
+                    },
+                },
             }
         })
         return chats;

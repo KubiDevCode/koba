@@ -57,12 +57,17 @@ class EventService {
             where: {
                 users: {
                     some: {
-                        id: userId
+                        telegramId: userId
                     }
                 }
             },
             include: {
                 users: true,
+                chat: {
+                    include: {
+                        users: true,
+                    },
+                },
             },
         });
         return event;
@@ -79,6 +84,31 @@ class EventService {
         });
     }
 
+    async addUserToEvent(eventId: string, userName: string | undefined, tgId: string) {
+        const user = await prisma.user.upsert({
+            where: {
+                telegramId: tgId,
+            },
+            update: {
+                ...(userName !== undefined && { username: userName }),
+            },
+            create: {
+                telegramId: tgId,
+                ...(userName !== undefined && { username: userName }),
+            },
+        });
+
+        return prisma.event.update({
+            where: {
+                id: eventId,
+            },
+            data: {
+                users: {
+                    connect: { id: user.id },
+                },
+            },
+        });
+    }
 }
 
 export default new EventService()

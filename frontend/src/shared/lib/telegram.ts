@@ -3,6 +3,7 @@ type TelegramWebApp = {
   expand: () => void;
   initData?: string;
   initDataUnsafe?: {
+    start_param?: string;
     user?: {
       id?: number;
       first_name?: string;
@@ -28,4 +29,8 @@ export function initializeTelegramApp() {
 
 export function getTelegramFirstName() {
   return window.Telegram?.WebApp?.initDataUnsafe?.user?.first_name ?? "Степан";
+}
+
+export function getTelegramStartParam() {
+  return window.Telegram?.WebApp?.initDataUnsafe?.start_param ?? null;
 }

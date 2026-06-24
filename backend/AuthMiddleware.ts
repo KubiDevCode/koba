@@ -1,6 +1,40 @@
 import crypto from "node:crypto";
 import type { NextFunction, Request, Response } from "express";
 
+export type TelegramAuthUser = {
+    id: number;
+    first_name?: string;
+    last_name?: string;
+    username?: string;
+    language_code?: string;
+    is_premium?: boolean;
+    allows_write_to_pm?: boolean;
+    photo_url?: string;
+};
+
+declare global {
+    namespace Express {
+        interface Request {
+            telegramUser?: TelegramAuthUser;
+            telegramStartParam?: string;
+        }
+    }
+}
+
+const parseTelegramUser = (userRaw: string | null) => {
+    if (!userRaw) {
+        return null;
+    }
+
+    const user = JSON.parse(userRaw) as TelegramAuthUser;
+
+    if (typeof user.id !== "number") {
+        return null;
+    }
+
+    return user;
+};
+
 export function AuthMiddleware(
     req: Request,
     res: Response,
@@ -57,6 +91,19 @@ export function AuthMiddleware(
 
         if (!valid) {
             return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        const telegramUser = parseTelegramUser(params.get("user"));
+
+        if (!telegramUser) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        req.telegramUser = telegramUser;
+
+        const startParam = params.get("start_param");
+        if (startParam) {
+            req.telegramStartParam = startParam;
         }
 
         next();

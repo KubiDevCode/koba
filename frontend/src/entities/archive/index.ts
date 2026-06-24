@@ -1,4 +1,3 @@
-export { groups } from "./model/mock-data";
 export { CalendarEventItem } from "./ui/CalendarEventItem";
 export { EventPreviewCard } from "./ui/EventPreviewCard";
 export { GroupAccessItem } from "./ui/GroupAccessItem";

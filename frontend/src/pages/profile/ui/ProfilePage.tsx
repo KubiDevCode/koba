@@ -31,13 +31,13 @@ export function ProfilePage({
 
       <ProfileSummary userName={userName} />
 
-      <section className="section-block">
+      <section className="px-4 pb-6">
         <SectionHeading
           eyebrow="Разрешения"
           title="Доступные группы"
-          action={<strong>{groups.length}</strong>}
+          action={<strong className="text-lg font-extrabold">{groups.length}</strong>}
         />
-        <div className="access-list">
+        <div className="grid gap-2">
           {groups.map((group) => (
             <GroupAccessItem
               key={group.id}
@@ -46,7 +46,11 @@ export function ProfilePage({
             />
           ))}
         </div>
-        <button className="invite-wide" onClick={onOpenInvite}>
+        <button
+          type="button"
+          className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-slate-900 text-sm font-extrabold text-white"
+          onClick={onOpenInvite}
+        >
           <Link2 size={18} />
           Вступить по приглашению
         </button>
@@ -57,13 +61,15 @@ export function ProfilePage({
 
 function ProfileSummary({ userName }: { userName: string }) {
   return (
-    <section className="profile-band">
-      <div className="profile-avatar">{userName.slice(0, 1)}</div>
-      <div>
-        <h2>{userName}</h2>
-        <p>Идентифицирован через Telegram</p>
+    <section className="mx-4 mb-6 flex items-center gap-3 rounded-lg bg-slate-900 p-5 text-white">
+      <div className="grid h-14 w-14 place-items-center rounded-full bg-red-500 text-lg font-extrabold">
+        {userName.slice(0, 1)}
       </div>
-      <span className="verified">
+      <div>
+        <h2 className="mb-1 text-lg font-extrabold">{userName}</h2>
+        <p className="text-xs text-slate-300">Идентифицирован через Telegram</p>
+      </div>
+      <span className="ml-auto grid h-7 w-7 place-items-center rounded-full bg-emerald-600">
         <Check size={15} />
       </span>
     </section>

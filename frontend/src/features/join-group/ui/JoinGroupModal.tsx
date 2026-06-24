@@ -19,8 +19,8 @@ export function JoinGroupModal({ open, onClose }: Props) {
 
   const title = groupFound ? "Группа найдена" : "Вступить в группу";
   const description = groupFound
-    ? "Вас пригласили в закрытый архив «Лето на даче»."
-    : "Введите код из приглашения. После проверки группа появится в вашем архиве.";
+    ? "Приглашение найдено. После вступления группа появится в архиве."
+    : "Введите код приглашения. После проверки группа появится в вашем архиве.";
 
   return (
     <SheetModal
@@ -31,19 +31,25 @@ export function JoinGroupModal({ open, onClose }: Props) {
       onClose={close}
     >
       {groupFound ? (
-        <button className="primary-button" onClick={close}>
+        <button
+          type="button"
+          className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-slate-900 text-sm font-extrabold text-white"
+          onClick={close}
+        >
           <Check size={18} />
           Вступить
         </button>
       ) : (
         <>
           <input
+            className="h-11 w-full rounded-lg border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
             value={inviteCode}
             onChange={(event) => setInviteCode(event.target.value.toUpperCase())}
             placeholder="Например, LETO-2026"
           />
           <button
-            className="primary-button"
+            type="button"
+            className="mt-3 flex h-11 w-full items-center justify-center rounded-lg bg-slate-900 text-sm font-extrabold text-white disabled:opacity-35"
             disabled={!inviteCode}
             onClick={() => setGroupFound(true)}
           >

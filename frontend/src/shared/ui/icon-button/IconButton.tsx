@@ -7,20 +7,25 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const classNames = {
-  default: "icon-button",
-  subtle: "icon-button subtle",
-  glass: "glass-button",
+  default:
+    "grid h-10 w-10 place-items-center rounded-lg bg-white text-slate-800 shadow-sm shadow-slate-900/10",
+  subtle:
+    "grid h-10 w-10 place-items-center rounded-lg bg-slate-200 text-slate-800",
+  glass:
+    "grid h-10 w-10 place-items-center rounded-lg bg-slate-950/60 text-white backdrop-blur",
 };
 
 export function IconButton({
   label,
   children,
   variant = "default",
+  className,
   ...buttonProps
 }: Props) {
   return (
     <button
-      className={classNames[variant]}
+      type="button"
+      className={[classNames[variant], className].filter(Boolean).join(" ")}
       aria-label={label}
       {...buttonProps}
     >

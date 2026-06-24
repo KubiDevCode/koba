@@ -13,6 +13,7 @@ export type Participant = {
 
 export type ArchiveEvent = {
   id: number;
+  groupId: number;
   title: string;
   date: string;
   shortDate: string;

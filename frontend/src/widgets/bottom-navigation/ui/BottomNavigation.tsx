@@ -1,33 +1,36 @@
 import { CalendarDays, UserRound, UsersRound } from "lucide-react";
 import type { ReactNode } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-export type MainView = "groups" | "calendar" | "profile";
+const mainRoutes = ["/groups", "/calendar", "/profile"];
 
-type Props = {
-  activeView: MainView;
-  onNavigate: (view: MainView) => void;
-};
+export function BottomNavigation() {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-export function BottomNavigation({ activeView, onNavigate }: Props) {
+  if (!mainRoutes.includes(location.pathname)) {
+    return null;
+  }
+
   return (
-    <nav className="bottom-nav">
+    <nav className="fixed inset-x-0 bottom-0 z-10 mx-auto flex h-18 max-w-[680px] justify-around border-t border-slate-200 bg-white pt-2">
       <NavigationItem
-        active={activeView === "groups"}
+        active={location.pathname === "/groups"}
         icon={<UsersRound size={21} />}
         label="Группы"
-        onClick={() => onNavigate("groups")}
+        onClick={() => navigate("/groups")}
       />
       <NavigationItem
-        active={activeView === "calendar"}
+        active={location.pathname === "/calendar"}
         icon={<CalendarDays size={21} />}
         label="События"
-        onClick={() => onNavigate("calendar")}
+        onClick={() => navigate("/calendar")}
       />
       <NavigationItem
-        active={activeView === "profile"}
+        active={location.pathname === "/profile"}
         icon={<UserRound size={21} />}
         label="Профиль"
-        onClick={() => onNavigate("profile")}
+        onClick={() => navigate("/profile")}
       />
     </nav>
   );
@@ -47,7 +50,14 @@ function NavigationItem({
   onClick,
 }: NavigationItemProps) {
   return (
-    <button className={active ? "active" : ""} onClick={onClick}>
+    <button
+      type="button"
+      className={[
+        "grid min-w-14 place-items-center content-center gap-1 bg-transparent text-[10px] font-extrabold",
+        active ? "text-red-600" : "text-slate-400",
+      ].join(" ")}
+      onClick={onClick}
+    >
       {icon}
       <span>{label}</span>
     </button>
