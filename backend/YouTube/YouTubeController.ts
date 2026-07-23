@@ -202,6 +202,7 @@ class YouTubeController {
             }
 
             const uploadedVideo = await YouTubeService.uploadVideo({
+                eventId: bodyString(req.body.eventId),
                 filePath: file.path,
                 mimeType: file.mimetype,
                 title,

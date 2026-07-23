@@ -1,17 +1,19 @@
 import api from "../../../shared/api/api";
 import type {
   BackendEventPhotosResponse,
+  BackendEventVideosResponse,
   BackendMedia,
 } from "./dto";
 
 export type EventMediaById = Record<string, BackendMedia[]>;
 
 async function getEventMedia(eventId: string) {
-  const response = await api.get<BackendEventPhotosResponse>(
-    `/event/photos/${eventId}`,
-  );
+  const [photosResponse, videosResponse] = await Promise.all([
+    api.get<BackendEventPhotosResponse>(`/event/photos/${eventId}`),
+    api.get<BackendEventVideosResponse>(`/event/videos/${eventId}`),
+  ]);
 
-  return response.data.photos;
+  return [...photosResponse.data.photos, ...videosResponse.data.videos];
 }
 
 export async function getEventMediaByIds(eventIds: string[]) {

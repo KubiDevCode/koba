@@ -3,6 +3,11 @@ export type Media = {
   type: "photo" | "video";
   src: string;
   duration?: string;
+  embedUrl?: string;
+  watchUrl?: string;
+  thumbnailUrl?: string | null;
+  youtubeVideoId?: string;
+  title?: string;
 };
 
 export type Participant = {

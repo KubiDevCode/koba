@@ -1,4 +1,4 @@
-import type { Prisma } from "@app/database";
+import type { Prisma, YoutubeVideoPrivacyStatus } from "@app/database";
 import { prisma } from "../../bot/src/service/db.js"
 import { downloadTelegramPhoto } from "../handlers/getPhotoFromFileId.js";
 
@@ -26,6 +26,22 @@ type EventPhotoFile = {
     buffer: Buffer;
     mimeType: string;
 };
+
+type EventVideoFile = {
+    videos: {
+        id: string;
+        type: "video";
+        src: string;
+        youtubeVideoId: string;
+        title: string;
+        description?: string | null;
+        privacyStatus?: YoutubeVideoPrivacyStatus 
+        status?: string | null;
+        watchUrl?: string | null;
+        embedUrl?: string | null;
+        thumbnailUrl?: string | null;
+    }[];
+}
 
 const eventDataDto = (data: EventInput) => {
     return {
@@ -166,6 +182,42 @@ class EventService {
         }
 
         return downloadTelegramPhoto(photo.fileId);
+    }
+
+    async getEventVideos(eventId: string, telegramUserId: string): Promise<EventVideoFile | null> {
+        const event = await prisma.event.findFirst({
+            where: {
+                id: eventId,
+                users: {
+                    some: {
+                        telegramId: telegramUserId,
+                    },
+                },
+            },
+            include: {
+                youtubeVideo: true
+            },
+        });
+
+        if (!event) {
+            return null;
+        }
+
+        return {
+            videos: event.youtubeVideo.map((video) => ({
+                id: video.id,
+                type: "video",
+                src: video.thumbnailUrl ?? video.watchUrl,
+                youtubeVideoId: video.youtubeVideoId,
+                title: video.title,
+                description: video.description,
+                privacyStatus: video.privacyStatus,
+                status: video.status,
+                watchUrl: video.watchUrl,
+                embedUrl: video.embedUrl,
+                thumbnailUrl: video.thumbnailUrl,
+            })),
+        }
     }
 }
 

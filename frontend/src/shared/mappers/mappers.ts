@@ -92,6 +92,13 @@ function mapMedia(media: BackendMedia[]): Media[] {
     type: item.type,
     src: item.src,
     ...(item.duration !== undefined && { duration: item.duration }),
+    ...(item.embedUrl !== undefined && { embedUrl: item.embedUrl }),
+    ...(item.watchUrl !== undefined && { watchUrl: item.watchUrl }),
+    ...(item.thumbnailUrl !== undefined && { thumbnailUrl: item.thumbnailUrl }),
+    ...(item.youtubeVideoId !== undefined && {
+      youtubeVideoId: item.youtubeVideoId,
+    }),
+    ...(item.title !== undefined && { title: item.title }),
   }));
 }
 

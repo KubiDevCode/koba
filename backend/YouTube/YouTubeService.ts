@@ -1,5 +1,7 @@
 import { createReadStream } from "node:fs";
+import { YoutubeVideoPrivacyStatus } from "@app/database";
 import { google } from "googleapis";
+import { prisma } from "../../bot/src/service/db.js";
 
 const DEFAULT_YOUTUBE_SCOPES = [
     "https://www.googleapis.com/auth/youtube.force-ssl",
@@ -15,6 +17,7 @@ type OAuthTokens = {
 type PrivacyStatus = "private" | "unlisted" | "public";
 
 type UploadVideoInput = {
+    eventId?: string | undefined;
     filePath: string;
     mimeType: string;
     title: string;
@@ -91,6 +94,18 @@ function createOAuthClient() {
         config.clientSecret,
         config.redirectUri,
     );
+}
+
+function toPrismaPrivacyStatus(status: PrivacyStatus) {
+    switch (status) {
+        case "public":
+            return YoutubeVideoPrivacyStatus.PUBLIC;
+        case "unlisted":
+            return YoutubeVideoPrivacyStatus.UNLISTED;
+        case "private":
+        default:
+            return YoutubeVideoPrivacyStatus.PRIVATE;
+    }
 }
 
 class YouTubeService {
@@ -220,19 +235,44 @@ class YouTubeService {
             throw new Error("YouTube did not return a video id");
         }
 
-        return {
+        const privacyStatus = (
+            response.data.status?.privacyStatus
+            ?? input.privacyStatus
+            ?? "private"
+        ) as PrivacyStatus;
+
+        const videoData = {
             youtubeVideoId: videoId,
             title: response.data.snippet?.title ?? input.title,
             description: response.data.snippet?.description ?? input.description ?? "",
-            privacyStatus:
-                response.data.status?.privacyStatus ?? input.privacyStatus ?? "private",
+            privacyStatus,
+            status: response.data.status?.uploadStatus ?? "uploaded",
             watchUrl: `https://www.youtube.com/watch?v=${videoId}`,
             embedUrl: `https://www.youtube.com/embed/${videoId}`,
             thumbnailUrl: response.data.snippet?.thumbnails?.high?.url
                 ?? response.data.snippet?.thumbnails?.medium?.url
                 ?? response.data.snippet?.thumbnails?.default?.url
                 ?? null,
-        };
+        }
+
+        const savedVideo = await prisma.youTubeVideo.create({
+            data: {
+                youtubeVideoId: videoData.youtubeVideoId,
+                title: videoData.title,
+                description: videoData.description,
+                privacyStatus: toPrismaPrivacyStatus(videoData.privacyStatus),
+                status: videoData.status,
+                watchUrl: videoData.watchUrl,
+                embedUrl: videoData.embedUrl,
+                thumbnailUrl: videoData.thumbnailUrl,
+                eventId: input.eventId ?? null,
+            },
+        });
+
+        return {
+            id: savedVideo.id,
+            ...videoData,
+        }
     }
 }
 

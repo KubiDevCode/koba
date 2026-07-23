@@ -128,6 +128,29 @@ class EventController {
             return res.status(502).json({ error: "Photo download failed" })
         }
     }
+    
+    async getEventVideos(req: Request, res: Response) {
+        try {
+            const { id } = req.telegramUser as TelegramAuthUser
+            const { eventId } = Array.isArray(req.params) ? req.params[0] : req.params
+
+            if (!id || !eventId) {
+                return res.status(400).json({ error: 'Нет необходимых данных' })
+            }
+
+            const videos = await EventService.getEventVideos(eventId, String(id))
+
+            if (!videos) {
+                return res.status(404).json({ error: "Event not found" })
+            }
+
+            return res.status(200).json(videos)
+
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ error: "Internal server error" })
+        }
+    }
 }
 
 export default new EventController()

@@ -9,6 +9,11 @@ export type BackendMedia = {
   type: "photo" | "video";
   src: string;
   duration?: string;
+  embedUrl?: string;
+  watchUrl?: string;
+  thumbnailUrl?: string | null;
+  youtubeVideoId?: string;
+  title?: string;
 };
 
 export type BackendEvent = {
@@ -34,4 +39,8 @@ export type BackendEventWithChat = BackendEvent & {
 
 export type BackendEventPhotosResponse = {
   photos: BackendMedia[];
+};
+
+export type BackendEventVideosResponse = {
+  videos: BackendMedia[];
 };

@@ -12,6 +12,12 @@ enum Role {
   ADMIN
 }
 
+enum YoutubeVideoPrivacyStatus {
+  PRIVATE
+  UNLISTED
+  PUBLIC
+}
+
 model User {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now()) @map("created_at")
@@ -96,7 +102,7 @@ model YouTubeVideo {
   youtubeVideoId String  @unique
   title          String
   description    String?
-  privacyStatus  String
+  privacyStatus  YoutubeVideoPrivacyStatus
   status         String
 
   watchUrl     String

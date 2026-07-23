@@ -1,4 +1,4 @@
-import { Image, MoreHorizontal, Play, Send, Video, X } from "lucide-react";
+import { Image, MoreHorizontal, Send, Video, X } from "lucide-react";
 import type { ReactNode } from "react";
 import type { ArchiveEvent, Media } from "../../../entities/archive";
 
@@ -12,6 +12,10 @@ export function MediaViewer({ event, media, onClose }: Props) {
   if (!event || !media) return null;
 
   const mediaType = media.type === "video" ? "Видео" : "Фото";
+  const videoSrc = media.embedUrl
+    ?? (media.youtubeVideoId
+      ? `https://www.youtube.com/embed/${media.youtubeVideoId}`
+      : undefined);
 
   return (
     <div
@@ -40,20 +44,20 @@ export function MediaViewer({ event, media, onClose }: Props) {
         </button>
       </div>
 
-      <img className="max-h-[75vh] w-full object-contain" src={media.src} alt="" />
-
-      {media.type === "video" && (
-        <button
-          type="button"
-          className="absolute grid h-16 w-16 place-items-center rounded-full bg-red-600 text-white"
-          aria-label="Воспроизвести"
+      {media.type === "video" && videoSrc ? (
+        <iframe
+          className="aspect-video w-full max-w-5xl"
+          src={videoSrc}
+          title={media.title ?? event.title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
           onClick={(event) => event.stopPropagation()}
-        >
-          <Play size={26} fill="currentColor" />
-        </button>
+        />
+      ) : (
+        <img className="max-h-[75vh] w-full object-contain" src={media.src} alt="" />
       )}
 
-      <div className="absolute inset-x-0 bottom-0 z-10 flex justify-around bg-gradient-to-t from-black/85 to-transparent px-3 py-6 text-white">
+      <div className="absolute inset-x-0 bottom-0 z-10 flex justify-around bg-linear-to-t from-black/85 to-transparent px-3 py-6 text-white">
         <ViewerAction icon={<Image size={18} />} label="В альбом" />
         <ViewerAction icon={<Send size={18} />} label="Поделиться" />
         <ViewerAction icon={<Video size={18} />} label="Оригинал" />

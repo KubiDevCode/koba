@@ -6,6 +6,7 @@ const router = Router();
 
 router.get('/event/invite/:eventId', AuthMiddleware, EventController.addUserToEvent)
 router.get('/event/photos/:eventId', AuthMiddleware, EventController.getEventPhotos)
+router.get('/event/videos/:eventId', AuthMiddleware, EventController.getEventVideos)
 router.get('/event/photo/:photoId', EventController.getEventPhoto)
 router.get('/event/:userId', AuthMiddleware, EventController.getEvent)
 router.post('/event', AuthMiddleware, EventController.createEvent)
