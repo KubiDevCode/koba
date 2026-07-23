@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import chatRouter from "./Chat/ChatRouter.js";
 import eventRouter from "./Event/EventRouter.js";
+import youtubeRouter from "./YouTube/YouTubeRouter.js";
 import { prisma } from "../bot/src/service/db.js";
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(cors());
 app.use('/', chatRouter)
 app.use('/', eventRouter) 
+app.use('/', youtubeRouter)
 
 if (existsSync(frontendDistPath)) {
     app.use(express.static(frontendDistPath));

@@ -31,6 +31,10 @@ export function getTelegramFirstName() {
   return window.Telegram?.WebApp?.initDataUnsafe?.user?.first_name ?? "Степан";
 }
 
+export function getTelegramUserId() {
+  return window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
+}
+
 export function getTelegramStartParam() {
   return window.Telegram?.WebApp?.initDataUnsafe?.start_param ?? null;
 }

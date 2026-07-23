@@ -24,7 +24,7 @@ export function ParticipantPreview({
         className="flex min-w-0 flex-1 items-center bg-transparent p-0 text-left"
         onClick={onClick}
       >
-        <span className="flex min-w-[106px]">
+        <span className="flex min-w-26.5">
           {participants.slice(0, 4).map((participant) => (
             <img
               className="-mr-4 h-9 w-9 rounded-full border-2 border-white object-cover"

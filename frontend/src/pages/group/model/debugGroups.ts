@@ -8,31 +8,31 @@ const avatar =
     "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=85";
 
 const participants: Participant[] = [
-    { id: 1, name: "kubiDev", avatar },
-    { id: 2, name: "Septospace", avatar },
-    { id: 3, name: "Y0ldar", avatar },
-    { id: 4, name: "electchem", avatar },
+    { id: "debug-user-1", name: "kubiDev", avatar },
+    { id: "debug-user-2", name: "Septospace", avatar },
+    { id: "debug-user-3", name: "Y0ldar", avatar },
+    { id: "debug-user-4", name: "electchem", avatar },
 ];
 
 const fortniteMedia: Media[] = [
-    { id: 1, type: "photo", src: fortniteCover },
+    { id: "debug-media-1", type: "photo", src: fortniteCover },
     {
-        id: 2,
+        id: "debug-media-2",
         type: "video",
         duration: "0:42",
         src: "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=900&q=85",
     },
     {
-        id: 3,
+        id: "debug-media-3",
         type: "photo",
         src: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=85",
     },
 ];
 
 const weekendMedia: Media[] = [
-    { id: 4, type: "photo", src: weekendCover },
+    { id: "debug-media-4", type: "photo", src: weekendCover },
     {
-        id: 5,
+        id: "debug-media-5",
         type: "video",
         duration: "1:08",
         src: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=900&q=85",
@@ -49,7 +49,7 @@ export const debugGroups: Group[] = [
         avatar,
         events: [
             {
-                id: 2001,
+                id: "debug-event-2001",
                 groupId: 1001,
                 title: "Вечерний сквад",
                 date: "22 июня 2026",
@@ -63,7 +63,7 @@ export const debugGroups: Group[] = [
                 participants,
             },
             {
-                id: 2002,
+                id: "debug-event-2002",
                 groupId: 1001,
                 title: "Лучшие моменты недели",
                 date: "18 июня 2026",
@@ -87,7 +87,7 @@ export const debugGroups: Group[] = [
         avatar,
         events: [
             {
-                id: 2003,
+                id: "debug-event-2003",
                 groupId: 1002,
                 title: "Шашлыки и настолки",
                 date: "25 июня 2026",

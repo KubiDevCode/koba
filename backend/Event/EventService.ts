@@ -1,5 +1,6 @@
 import type { Prisma } from "@app/database";
 import { prisma } from "../../bot/src/service/db.js"
+import { downloadTelegramPhoto } from "../handlers/getPhotoFromFileId.js";
 
 type EventInput = {
     title: string;
@@ -10,6 +11,21 @@ type EventInput = {
 };
 
 type UpdateEventInput = Partial<EventInput>;
+
+type EventPhoto = {
+    id: string;
+    type: "photo";
+    src: string;
+};
+
+type EventPhotosResult = {
+    photos: EventPhoto[];
+};
+
+type EventPhotoFile = {
+    buffer: Buffer;
+    mimeType: string;
+};
 
 const eventDataDto = (data: EventInput) => {
     return {
@@ -108,6 +124,48 @@ class EventService {
                 },
             },
         });
+    }
+
+    async getEventPhotos(eventId: string, telegramUserId: string): Promise<EventPhotosResult | null> {
+        const event = await prisma.event.findFirst({
+            where: {
+                id: eventId,
+                users: {
+                    some: {
+                        telegramId: telegramUserId,
+                    },
+                },
+            },
+            include: {
+                photos: true,
+            },
+        });
+
+        if (!event) {
+            return null;
+        }
+
+        return {
+            photos: event.photos.map((photo) => ({
+                id: photo.id,
+                type: "photo",
+                src: `/event/photo/${photo.id}`,
+            })),
+        };
+    }
+
+    async getEventPhoto(photoId: string): Promise<EventPhotoFile | null> {
+        const photo = await prisma.photo.findUnique({
+            where: {
+                id: photoId,
+            },
+        });
+
+        if (!photo) {
+            return null;
+        }
+
+        return downloadTelegramPhoto(photo.fileId);
     }
 }
 

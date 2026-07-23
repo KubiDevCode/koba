@@ -1,22 +1,22 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import type { Group } from "../../entities/archive";
+import { useArchiveUiStore } from "../../entities/archive";
 import { ProfilePage } from "../../pages/profile";
+import { getTelegramFirstName } from "../../shared/lib/telegram";
+import { useArchiveGroups } from "../model/useArchiveSelectors";
 
-type Props = {
-  userName: string;
-  groups: Group[];
-  onOpenInvite: () => void;
-};
-
-export function ProfileRoute({ userName, groups, onOpenInvite }: Props) {
+export function ProfileRoute() {
   const navigate = useNavigate();
+  const [userName] = useState(getTelegramFirstName);
+  const groups = useArchiveGroups();
+  const openInvite = useArchiveUiStore((state) => state.openInvite);
 
   return (
     <ProfilePage
       userName={userName}
       groups={groups}
       onOpenGroup={(group) => navigate(`/groups/${group.id}`)}
-      onOpenInvite={onOpenInvite}
+      onOpenInvite={openInvite}
     />
   );
 }

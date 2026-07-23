@@ -3,13 +3,13 @@ import type { ReactNode } from "react";
 import type { ArchiveEvent, Media } from "../../../entities/archive";
 
 type Props = {
-  event: ArchiveEvent;
+  event: ArchiveEvent | null;
   media: Media | null;
   onClose: () => void;
 };
 
 export function MediaViewer({ event, media, onClose }: Props) {
-  if (!media) return null;
+  if (!event || !media) return null;
 
   const mediaType = media.type === "video" ? "Видео" : "Фото";
 

@@ -11,9 +11,9 @@ export function GroupHero({ group, onBack }: Props) {
   return (
     <header
       className="relative h-80 bg-cover bg-center p-4 text-white"
-      style={{ backgroundImage: `url(${group.cover})` }}
+      style={{ backgroundImage: `url(${group.avatar})` }}
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-transparent to-slate-950/90" />
+      <div className="absolute inset-0 bg-linear-to-b from-slate-950/40 via-transparent to-slate-950/90" />
       <div className="relative z-10 flex justify-between">
         <IconButton label="Назад" variant="glass" onClick={onBack}>
           <ArrowLeft size={20} />

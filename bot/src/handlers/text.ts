@@ -13,6 +13,11 @@ export function registerTextHandler(bot: Telegraf, bootTimeMs: number) {
             const tgUser = ctx.from;
             const text = ctx.message.text;
 
+            const chatS = await ctx.telegram.getChat(ctx.chat.id);
+
+            console.log(chatS);
+            console.log(ctx.from);
+
             if (
                 !tgUser ||
                 !tgChat ||

@@ -108,6 +108,38 @@ export async function getChatContext(chatId: string) {
         .join('\n');
 }
 
+export async function saveGroupAvatar(
+    telegramChatId: string,
+    avatarFileId: string,
+    title?: string,
+) {
+    await prisma.chat.upsert({
+        where: {
+            telegramId: telegramChatId,
+        },
+        update: {
+            avatarFileId,
+            ...(title !== undefined && { title }),
+        },
+        create: {
+            telegramId: telegramChatId,
+            avatarFileId,
+            ...(title !== undefined && { title }),
+        },
+    });
+}
+
+export async function clearGroupAvatar(telegramChatId: string) {
+    await prisma.chat.updateMany({
+        where: {
+            telegramId: telegramChatId,
+        },
+        data: {
+            avatarFileId: null,
+        },
+    });
+}
+
 export async function saveBotMessage(
     chatId: string,
     botUserId: string,

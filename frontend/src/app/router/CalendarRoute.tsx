@@ -1,13 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import type { EventWithGroup } from "../../entities/archive";
 import { CalendarPage } from "../../pages/calendar";
+import { useArchiveEventsWithGroups } from "../model/useArchiveSelectors";
 
-type Props = {
-  events: EventWithGroup[];
-};
-
-export function CalendarRoute({ events }: Props) {
+export function CalendarRoute() {
   const navigate = useNavigate();
+  const events = useArchiveEventsWithGroups();
 
   return (
     <CalendarPage

@@ -1,18 +1,18 @@
 export type Media = {
-  id: number;
+  id: string;
   type: "photo" | "video";
   src: string;
   duration?: string;
 };
 
 export type Participant = {
-  id: number;
+  id: string;
   name: string;
   avatar: string;
 };
 
 export type ArchiveEvent = {
-  id: number;
+  id: string;
   groupId: number;
   title: string;
   date: string;

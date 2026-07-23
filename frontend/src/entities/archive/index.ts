@@ -5,6 +5,7 @@ export { GroupListItem } from "./ui/GroupListItem";
 export { MediaGallery } from "./ui/MediaGallery";
 export { ParticipantPreview } from "./ui/ParticipantPreview";
 export { TimelineEventItem } from "./ui/TimelineEventItem";
+export { useArchiveUiStore } from "./model/archiveUiStore";
 export type {
   ArchiveEvent,
   EventWithGroup,

@@ -1,13 +1,17 @@
 import type { ArchiveEvent } from "../../../entities/archive";
-import { ParticipantPreview } from "../../../entities/archive";
+import { ParticipantPreview, useArchiveUiStore } from "../../../entities/archive";
 import { SectionHeading } from "../../../shared/ui/section-heading";
 
 type Props = {
   event: ArchiveEvent;
-  onOpenParticipants: () => void;
 };
 
-export function EventParticipantsSection({ event, onOpenParticipants }: Props) {
+export function EventParticipantsSection({ event }: Props) {
+  const openParticipants = useArchiveUiStore((state) => state.openParticipants);
+  const openAddUserToEvent = useArchiveUiStore(
+    (state) => state.openAddUserToEvent,
+  );
+
   return (
     <section className="px-4 pb-6">
       <SectionHeading
@@ -17,7 +21,7 @@ export function EventParticipantsSection({ event, onOpenParticipants }: Props) {
           <button
             type="button"
             className="text-xs font-extrabold text-red-600"
-            onClick={onOpenParticipants}
+            onClick={() => openParticipants(event.id)}
           >
             Все {event.participants.length}
           </button>
@@ -25,7 +29,8 @@ export function EventParticipantsSection({ event, onOpenParticipants }: Props) {
       />
       <ParticipantPreview
         participants={event.participants}
-        onClick={onOpenParticipants}
+        onClick={() => openParticipants(event.id)}
+        onAddClick={() => openAddUserToEvent(event.id)}
       />
     </section>
   );

@@ -7,3 +7,4 @@ frontend/dist
 /generated/prisma
 /packages/database/generated/prisma
 *.log
+backend/tmp/

@@ -36,8 +36,9 @@ model Chat {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  telegramId String  @unique
-  title      String?
+  telegramId   String  @unique
+  title        String?
+  avatarFileId String?
 
   users    User[]
   messages Entry[]
@@ -63,12 +64,45 @@ model Event {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  title       String
+  title       String   @unique
   description String?
   date        DateTime
 
   chat   Chat   @relation(fields: [chatId], references: [id])
   chatId String
 
+  photos       Photo[]
+  youtubeVideo YouTubeVideo[]
+
   users User[]
+}
+
+model Photo {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  fileId String @unique
+
+  event   Event  @relation(fields: [eventId], references: [id])
+  eventId String
+}
+
+model YouTubeVideo {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  youtubeVideoId String  @unique
+  title          String
+  description    String?
+  privacyStatus  String
+  status         String
+
+  watchUrl     String
+  embedUrl     String
+  thumbnailUrl String?
+
+  eventId String?
+  event   Event?  @relation(fields: [eventId], references: [id])
 }

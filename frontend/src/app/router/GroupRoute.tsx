@@ -1,17 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom";
-import type { EventWithGroup, Group } from "../../entities/archive";
 import { GroupPage } from "../../pages/group";
+import { useArchiveGroup } from "../model/useArchiveSelectors";
 import { EmptyState } from "../ui/EmptyState";
 
-type Props = {
-  groups: Group[];
-  events: EventWithGroup[];
-};
-
-export function GroupRoute({ groups, events }: Props) {
+export function GroupRoute() {
   const navigate = useNavigate();
   const { groupId } = useParams();
-  const group = groups.find((item) => String(item.id) === groupId);
+  const group = useArchiveGroup(groupId);
 
   if (!group) {
     return (
@@ -19,14 +14,9 @@ export function GroupRoute({ groups, events }: Props) {
     );
   }
 
-  const visibleGroup = {
-    ...group,
-    events: events.filter((event) => String(event.group.id) === groupId),
-  };
-
   return (
     <GroupPage
-      group={visibleGroup}
+      group={group}
       onBack={() => navigate("/groups")}
       onOpenEvent={(event) => navigate(`/groups/${group.id}/events/${event.id}`)}
     />

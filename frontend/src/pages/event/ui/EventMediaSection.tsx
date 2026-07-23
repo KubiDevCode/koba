@@ -1,14 +1,15 @@
 import { Plus } from "lucide-react";
-import type { ArchiveEvent, Media } from "../../../entities/archive";
-import { MediaGallery } from "../../../entities/archive";
+import type { ArchiveEvent } from "../../../entities/archive";
+import { MediaGallery, useArchiveUiStore } from "../../../entities/archive";
 import { SectionHeading } from "../../../shared/ui/section-heading";
 
 type Props = {
   event: ArchiveEvent;
-  onOpenMedia: (media: Media) => void;
 };
 
-export function EventMediaSection({ event, onOpenMedia }: Props) {
+export function EventMediaSection({ event }: Props) {
+  const openMedia = useArchiveUiStore((state) => state.openMedia);
+
   return (
     <section className="px-4 pb-6">
       <SectionHeading
@@ -24,7 +25,10 @@ export function EventMediaSection({ event, onOpenMedia }: Props) {
           </button>
         }
       />
-      <MediaGallery media={event.media} onOpenMedia={onOpenMedia} />
+      <MediaGallery
+        media={event.media}
+        onOpenMedia={(media) => openMedia(event.id, media.id)}
+      />
     </section>
   );
 }
